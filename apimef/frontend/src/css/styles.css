@@ -1,0 +1,265 @@
+:root {
+  --primary-color: #f1c40f;
+  --secondary-color: #2c3e50;
+  --accent-color: #e67e22;
+  --background-color: #ecf0f1;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background-color);
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+}
+
+nav {
+  background-color: var(--secondary-color);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  margin: 0 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+nav a:hover {
+  background: var(--primary-color);
+  transform: scale(1.1);
+}
+
+#user-info {
+  display: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#logout-btn {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+#logout-btn:hover {
+  background-color: var(--primary-color);
+}
+
+header {
+  position: relative;
+  overflow: hidden;
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+header img {
+  width: 24%;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.5s ease;
+}
+
+header img:hover {
+  transform: scale(1.1);
+}
+
+#home {
+  padding: 20px;
+  background-color: var(--background-color);
+}
+
+#introduction {
+  padding: 40px;
+  background-color: #fff;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  animation: slideUp 1s ease-in-out;
+}
+
+#introduction h1 {
+  font-size: 36px;
+  color: var(--primary-color);
+}
+
+#introduction p {
+  font-size: 18px;
+  max-width: 800px;
+  margin: 20px auto;
+  color: var(--secondary-color);
+}
+
+#a-propos {
+  padding: 40px;
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+#a-propos h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+#a-propos p {
+  font-size: 18px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#valeurs {
+  display: flex;
+  justify-content: space-between;
+  padding: 40px;
+  background-color: #f9f9f9;
+  animation: slideUp 1.5s ease-in-out;
+}
+
+#valeurs div {
+  width: 30%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+#valeurs div:hover {
+  transform: scale(1.05);
+}
+
+#valeurs h3 {
+  color: var(--accent-color);
+}
+
+#valeurs p {
+  color: var(--secondary-color);
+}
+
+#actualites {
+  padding: 40px;
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  animation: fadeIn 2s ease-in-out;
+}
+
+#actualites-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+#actualites-container div {
+  width: 23%;
+  margin: 10px 0;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+#actualites-container div:hover {
+  transform: scale(1.05);
+}
+
+#actualites-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+#actualites-container p {
+  margin-top: 10px;
+  color: white;
+}
+
+footer {
+  padding: 20px;
+  background-color: var(--secondary-color);
+  color: white;
+  text-align: center;
+  animation: fadeIn 2.5s ease-in-out;
+}
+
+footer p,
+footer a {
+  font-size: 16px;
+}
+
+footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: var(--accent-color);
+}
+
+
+button {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--primary-color);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
