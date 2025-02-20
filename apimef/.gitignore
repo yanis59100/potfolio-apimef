@@ -1,0 +1,52 @@
+# Node.js dependencies
+node_modules/
+
+# Dossier dist (build)
+dist/
+
+# Dossier public (ressources statiques compilées)
+public/
+
+# Fichiers de log
+*.log
+
+# Fichiers d'IDE
+.idea/
+.vscode/
+
+# Fichiers de configuration locaux
+*.env
+.env.local
+.env.*.local
+
+# Fichiers générés par NPM
+package-lock.json
+yarn.lock
+
+# Cache de npm et de vue
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vite/
+
+# Fichiers de test
+coverage/
+
+# Dossier temporaire de développement
+temp/
+
+# Fichiers de configuration de VSCode (si tu en as)
+.vscode/
+
+# Dossier de build généré par Vue CLI (pour la production)
+build/
+
+# Système macOS
+.DS_Store
+
+# Système Windows
+Thumbs.db
+
+# Fichiers d'autres environnements (ex: JetBrains)
+.idea/
+*.iml
