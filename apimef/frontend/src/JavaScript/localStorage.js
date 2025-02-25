@@ -1,3 +1,10 @@
+const produits = {
+  "Miel de colza": "price_1Qw23XPi9FcT27xIio720j0o",
+  "Miel d'été": "price_1Qw23FPi9FcT27xIV5lkFXrv",
+  "Miel de printemps": "price_1Qw22zPi9FcT27xI9yjLfUGs",
+  "Miel de tilleul": "price_1Qw22cPi9FcT27xIHjjPvp5Q",
+};
+
 function ajouterAuPanier(produit, prix, quantite) {
   quantite = parseInt(quantite, 10);
   if (quantite < 1) {
@@ -38,7 +45,7 @@ function afficherPanier() {
     incrementBtn.textContent = "+";
     incrementBtn.onclick = () => ajusterQuantite(item.produit, 1);
 
-    li.textContent = `${item.quantite} x ${item.produit} - ${item.prix * item.quantite}€ `;
+    li.textContent = `${item.quantite} x ${item.produit} - ${(item.prix * item.quantite).toFixed(2)}€`;
     li.appendChild(decrementBtn);
     li.appendChild(incrementBtn);
 
@@ -46,7 +53,7 @@ function afficherPanier() {
     total += item.prix * item.quantite;
   });
 
-  totalPrix.textContent = `${total}€`;
+  totalPrix.textContent = `${total.toFixed(2)}€`;
 }
 
 function ajusterQuantite(produit, changement) {
@@ -65,10 +72,35 @@ function ajusterQuantite(produit, changement) {
   }
 }
 
-function finaliserAchat() {
-  alert("Merci pour votre achat !");
-  localStorage.removeItem("panier");
-  afficherPanier();
+async function finaliserAchat() {
+  const panier = JSON.parse(localStorage.getItem("panier")) || [];
+  
+  if (panier.length === 0) {
+    alert("Votre panier est vide.");
+    return;
+  }
+
+  try {
+    const lineItems = panier.map(item => ({
+      price: produits[item.produit],
+      quantity: item.quantite,
+    }));
+
+    const response = await fetch("/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ line_items: lineItems }),
+    });
+
+    const data = await response.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Erreur lors de la création de la session de paiement.");
+    }
+  } catch (error) {
+    console.error("Erreur:", error);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -86,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       alert("Vous êtes déconnecté.");
 
-      masquerUtilisateur();
+      afficherUtilisateur();
       window.location.href = '/connexion';
     });
   }
@@ -95,23 +127,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const utilisateur = JSON.parse(localStorage.getItem('utilisateur'));
     const userName = document.getElementById('user-name');
     
-    userName.textContent = utilisateur.nom;
-    userInfo.style.display = 'block';
-
-    connexionLink.style.display = 'none';
-    inscriptionLink.style.display = 'none';
+    if (utilisateur) {
+      userName.textContent = `${utilisateur.prenom} ${utilisateur.nom}`;
+      userInfo.style.display = "block";
+      connexionLink.style.display = "none";
+      inscriptionLink.style.display = "none";
+    } else {
+      userInfo.style.display = "none";
+      connexionLink.style.display = "block";
+      inscriptionLink.style.display = "block";
+    }
   }
 
-  function masquerUtilisateur() {
-    userInfo.style.display = 'none';
-
-    connexionLink.style.display = 'block';
-    inscriptionLink.style.display = 'block';
-  }
-
-  if (localStorage.getItem('utilisateur') && localStorage.getItem('token')) {
-    afficherUtilisateur();
-  } else {
-    masquerUtilisateur();
-  }
+  afficherUtilisateur();
 });
