@@ -5,7 +5,8 @@ exports.getAllProducts = async (req, res) => {
     const products = await Product.getAll();
     res.status(200).json(products);
   } catch (err) {
-    res.status(500).json({ message: "Erreur lors de la récupération des produits", error: err });
+    console.error("Erreur lors de la récupération des produits:", err);
+    res.status(500).json({ message: "Erreur lors de la récupération des produits", error: err.message });
   }
 };
 
@@ -18,7 +19,8 @@ exports.getProductById = async (req, res) => {
       res.status(404).json({ message: "Produit non trouvé" });
     }
   } catch (err) {
-    res.status(500).json({ message: "Erreur lors de la récupération du produit", error: err });
+    console.error("Erreur lors de la récupération du produit:", err);
+    res.status(500).json({ message: "Erreur lors de la récupération du produit", error: err.message });
   }
 };
 
@@ -27,24 +29,35 @@ exports.createProduct = async (req, res) => {
     const newProduct = await Product.create(req.body);
     res.status(201).json(newProduct);
   } catch (err) {
-    res.status(500).json({ message: "Erreur lors de la création du produit", error: err });
+    console.error("Erreur lors de la création du produit:", err);
+    res.status(500).json({ message: "Erreur lors de la création du produit", error: err.message });
   }
 };
 
 exports.updateProduct = async (req, res) => {
   try {
     const updatedProduct = await Product.update(req.params.id, req.body);
-    res.status(200).json(updatedProduct);
+    if (updatedProduct) {
+      res.status(200).json(updatedProduct);
+    } else {
+      res.status(404).json({ message: "Produit non trouvé pour mise à jour" });
+    }
   } catch (err) {
-    res.status(500).json({ message: "Erreur lors de la mise à jour du produit", error: err });
+    console.error("Erreur lors de la mise à jour du produit:", err);
+    res.status(500).json({ message: "Erreur lors de la mise à jour du produit", error: err.message });
   }
 };
 
 exports.deleteProduct = async (req, res) => {
   try {
-    await Product.delete(req.params.id);
-    res.status(200).json({ message: "Produit supprimé avec succès" });
+    const result = await Product.delete(req.params.id);
+    if (result.affectedRows > 0) {
+      res.status(200).json({ message: "Produit supprimé avec succès" });
+    } else {
+      res.status(404).json({ message: "Produit non trouvé pour suppression" });
+    }
   } catch (err) {
-    res.status(500).json({ message: "Erreur lors de la suppression du produit", error: err });
+    console.error("Erreur lors de la suppression du produit:", err);
+    res.status(500).json({ message: "Erreur lors de la suppression du produit", error: err.message });
   }
 };
