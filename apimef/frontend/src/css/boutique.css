@@ -10,7 +10,7 @@ body {
   background-color: var(--background-color);
   margin: 0;
   padding: 0;
-  color: #ffffff;
+  color: var(--secondary-color);
 }
 
 nav {
@@ -175,6 +175,7 @@ button:hover {
   font-weight: bold;
   display: block;
   margin-bottom: 10px;
+  color: var(--secondary-color);
 }
 
 .info-article p {
@@ -210,7 +211,7 @@ button:hover {
 }
 
 .panier h2 {
-  color: #333; /* Couleur noire pour le titre "Panier" */
+  color: #333;
 }
 
 #panierListe li {
