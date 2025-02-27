@@ -62,7 +62,7 @@ app.get("/api/products", async (req, res) => {
 });
 
 app.post("/create-checkout-session", async (req, res) => {
-  console.log(req.body);
+  console.log("Requête reçue pour créer une session de paiement :", req.body);
   const { line_items } = req.body;
 
   if (!line_items || line_items.length === 0) {
@@ -112,17 +112,36 @@ app.post("/api/register", (req, res) => {
 app.post("/api/login", (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) return res.status(400).json({ message: "L'email et le mot de passe sont requis." });
+  console.log("Tentative de connexion avec email:", email);
+
+  if (!email || !password) {
+    console.log("Erreur : L'email ou le mot de passe est manquant.");
+    return res.status(400).json({ message: "L'email et le mot de passe sont requis." });
+  }
 
   const query = "SELECT * FROM utilisateurs WHERE email = ?";
   db.query(query, [email], (err, results) => {
-    if (err) return res.status(500).json({ message: "Erreur interne." });
-    if (results.length === 0) return res.status(400).json({ message: "Utilisateur non trouvé." });
+    if (err) {
+      console.error("Erreur lors de la requête à la base de données:", err);
+      return res.status(500).json({ message: "Erreur interne." });
+    }
+    if (results.length === 0) {
+      console.log("Utilisateur non trouvé pour l'email:", email);
+      return res.status(400).json({ message: "Utilisateur non trouvé." });
+    }
 
     const user = results[0];
+    console.log("Utilisateur trouvé:", user);
+
     bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err) return res.status(500).json({ message: "Erreur interne." });
-      if (!isMatch) return res.status(400).json({ message: "Mot de passe incorrect." });
+      if (err) {
+        console.error("Erreur lors de la comparaison des mots de passe:", err);
+        return res.status(500).json({ message: "Erreur interne." });
+      }
+      if (!isMatch) {
+        console.log("Mot de passe incorrect pour l'utilisateur:", email);
+        return res.status(400).json({ message: "Mot de passe incorrect." });
+      }
 
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
       res.status(200).json({
@@ -133,6 +152,7 @@ app.post("/api/login", (req, res) => {
     });
   });
 });
+
 
 app.use((err, req, res, next) => {
   console.error("Erreur survenue :", err.message);
