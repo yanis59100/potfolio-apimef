@@ -8,17 +8,17 @@ const produits = {
 function ajouterAuPanier(produit, prix, quantite) {
   quantite = parseInt(quantite, 10);
   if (quantite < 1) {
-    alert("Veuillez entrer une quantité valide.");
-    return;
+      alert("Veuillez entrer une quantité valide.");
+      return;
   }
 
   let panier = JSON.parse(localStorage.getItem("panier")) || [];
 
   const index = panier.findIndex(item => item.produit === produit);
   if (index !== -1) {
-    panier[index].quantite += quantite;
+      panier[index].quantite += quantite;
   } else {
-    panier.push({ produit, prix, quantite });
+      panier.push({ produit, prix, quantite });
   }
 
   localStorage.setItem("panier", JSON.stringify(panier));
@@ -35,22 +35,22 @@ function afficherPanier() {
   let total = 0;
 
   panier.forEach(item => {
-    const li = document.createElement("li");
+      const li = document.createElement("li");
 
-    const decrementBtn = document.createElement("button");
-    decrementBtn.textContent = "-";
-    decrementBtn.onclick = () => ajusterQuantite(item.produit, -1);
+      const decrementBtn = document.createElement("button");
+      decrementBtn.textContent = "-";
+      decrementBtn.onclick = () => ajusterQuantite(item.produit, -1);
 
-    const incrementBtn = document.createElement("button");
-    incrementBtn.textContent = "+";
-    incrementBtn.onclick = () => ajusterQuantite(item.produit, 1);
+      const incrementBtn = document.createElement("button");
+      incrementBtn.textContent = "+";
+      incrementBtn.onclick = () => ajusterQuantite(item.produit, 1);
 
-    li.textContent = `${item.quantite} x ${item.produit} - ${(item.prix * item.quantite).toFixed(2)}€`;
-    li.appendChild(decrementBtn);
-    li.appendChild(incrementBtn);
+      li.textContent = `${item.quantite} x ${item.produit} - ${(item.prix * item.quantite).toFixed(2)}€`;
+      li.appendChild(decrementBtn);
+      li.appendChild(incrementBtn);
 
-    panierListe.appendChild(li);
-    total += item.prix * item.quantite;
+      panierListe.appendChild(li);
+      total += item.prix * item.quantite;
   });
 
   totalPrix.textContent = `${total.toFixed(2)}€`;
@@ -61,14 +61,14 @@ function ajusterQuantite(produit, changement) {
   
   const index = panier.findIndex(item => item.produit === produit);
   if (index !== -1) {
-    panier[index].quantite += changement;
+      panier[index].quantite += changement;
 
-    if (panier[index].quantite <= 0) {
-      panier.splice(index, 1);
-    }
+      if (panier[index].quantite <= 0) {
+          panier.splice(index, 1);
+      }
 
-    localStorage.setItem("panier", JSON.stringify(panier));
-    afficherPanier();
+      localStorage.setItem("panier", JSON.stringify(panier));
+      afficherPanier();
   }
 }
 
@@ -76,68 +76,63 @@ async function finaliserAchat() {
   const panier = JSON.parse(localStorage.getItem("panier")) || [];
   
   if (panier.length === 0) {
-    alert("Votre panier est vide.");
-    return;
+      alert("Votre panier est vide.");
+      return;
   }
 
   try {
-    const lineItems = panier.map(item => ({
-      price: produits[item.produit],
-      quantity: item.quantite,
-    }));
+      const lineItems = panier.map(item => ({
+          price: produits[item.produit],
+          quantity: item.quantite,
+      }));
 
-    const response = await fetch("/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ line_items: lineItems }),
-    });
+      const response = await fetch("/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ line_items: lineItems }),
+      });
 
-    const data = await response.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Erreur lors de la création de la session de paiement.");
-    }
+      if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Erreur de réponse :", response.status, errorData);
+          alert(`Erreur lors de la création de la session de paiement : ${errorData.error || 'Erreur inconnue'}`);
+          return;
+      }
+
+      const data = await response.json();
+      if (data.url) {
+          window.location.href = data.url;
+      } else {
+          alert("Erreur lors de la création de la session de paiement.");
+      }
   } catch (error) {
-    console.error("Erreur:", error);
+      console.error("Erreur:", error);
+      alert("Erreur lors de la connexion au serveur.");
   }
 }
 
+const utilisateur = JSON.parse(localStorage.getItem("utilisateur"));
+        const userInfo = document.getElementById("user-info");
+        const userName = document.getElementById("user-name");
+        const logoutBtn = document.getElementById("logout-btn");
+        const inscriptionLink = document.getElementById("inscription-link");
+        const connexionLink = document.getElementById("connexion-link");
+
+        if (utilisateur) {
+            userInfo.style.display = "block";
+            userName.textContent = utilisateur.nom;
+
+            inscriptionLink.style.display = "none";
+            connexionLink.style.display = "none";
+
+            logoutBtn.addEventListener("click", () => {
+                localStorage.removeItem("utilisateur");
+                localStorage.removeItem("token");
+                alert("Vous êtes déconnecté.");
+                window.location.reload();
+            });
+        }
+
 document.addEventListener("DOMContentLoaded", () => {
-  const userInfo = document.getElementById('user-info');
-  const logoutBtn = document.getElementById('logout-btn');
-  const connexionLink = document.getElementById('connexion-link');
-  const inscriptionLink = document.getElementById('inscription-link');
-
   afficherPanier();
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("utilisateur");
-      localStorage.removeItem("token");
-
-      alert("Vous êtes déconnecté.");
-
-      afficherUtilisateur();
-      window.location.href = '/connexion';
-    });
-  }
-
-  function afficherUtilisateur() {
-    const utilisateur = JSON.parse(localStorage.getItem('utilisateur'));
-    const userName = document.getElementById('user-name');
-    
-    if (utilisateur) {
-      userName.textContent = `${utilisateur.prenom} ${utilisateur.nom}`;
-      userInfo.style.display = "block";
-      connexionLink.style.display = "none";
-      inscriptionLink.style.display = "none";
-    } else {
-      userInfo.style.display = "none";
-      connexionLink.style.display = "block";
-      inscriptionLink.style.display = "block";
-    }
-  }
-
-  afficherUtilisateur();
 });
