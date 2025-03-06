@@ -1,4 +1,4 @@
-# Apimef
+<img title="Web HBNB" alt="Hbnb" src="./frontend/public/images/apimef.jpg">
 
 Apimef est un site e-commerce dédié à l'apiculture, où vous pouvez découvrir et acheter divers produits à base de miel. Ce projet vise à promouvoir l'apiculture en offrant une plateforme accessible pour les passionnés et les consommateurs souhaitant se procurer des produits authentiques et de qualité. Vous pourrez naviguer à travers une sélection de miels, de produits dérivés et d'accessoires d'apiculture.
 
