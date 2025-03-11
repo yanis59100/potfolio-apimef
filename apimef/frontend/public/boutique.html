@@ -8,9 +8,9 @@
   <title>Boutique - Apimef</title>
   <link rel="stylesheet" href="/css/boutique.css" />
   <link rel="shortcut icon" href="/images/apimef.jpg" type="image/png" />
-  <div id="app"></div>
 </head>
 <body>
+  <div id="app"></div>
   <header>
     <nav aria-label="Navigation principale">
       <ul>
@@ -36,7 +36,7 @@
     </section>
 
     <section class="recherche">
-      <form action="search" method="get">
+      <form action="/search" method="get">
         <input type="text" name="q" placeholder="Rechercher un produit" aria-label="Recherche de produit">
         <button type="submit">Rechercher</button>
       </form>
@@ -101,10 +101,20 @@
 
   <footer role="contentinfo">
     <p>
-      Vous avez une question ? <a href="mailto:8845@holbertonstudents.com">Contactez-nous</a>
+        Vous avez une question ?
+        <a href="mailto:8845@holbertonstudents.com">Contactez-nous</a>
     </p>
     <p>&copy; 2024 Apimef. Tous droits réservés.</p>
-  </footer>
+    <p>Suivez-nous sur :</p>
+    <ul>
+        <li>
+            <a href="https://facebook.com/Apimef" target="_blank" aria-label="Suivre Apimef sur Facebook">Facebook</a>
+        </li>
+        <li>
+            <a href="https://instagram.com/Apimef" target="_blank" aria-label="Suivre Apimef sur Instagram">Instagram</a>
+        </li>
+    </ul>
+</footer>
 
   <script src="/js/localStorage.js"></script>
 </body>
