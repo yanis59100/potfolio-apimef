@@ -4,9 +4,6 @@ node_modules/
 # Dossier dist (build)
 dist/
 
-# Dossier public (ressources statiques compilées)
-public/
-
 # Fichiers de log
 *.log
 
