@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("Document contact.js chargé");
-
     const userInfo = document.getElementById("user-info");
     const userName = document.getElementById("user-name");
     const loginLink = document.querySelector("a[href='/connexion']");
@@ -8,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const logoutBtn = document.getElementById("logout-btn");
 
     const utilisateur = JSON.parse(localStorage.getItem("utilisateur"));
-    console.log("Utilisateur récupéré:", utilisateur);
 
     if (utilisateur) {
         userInfo.style.display = "block";
@@ -24,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (logoutBtn) {
         logoutBtn.addEventListener("click", function() {
-            console.log("Déconnexion en cours...");
             localStorage.removeItem("utilisateur");
             localStorage.removeItem("token");
 

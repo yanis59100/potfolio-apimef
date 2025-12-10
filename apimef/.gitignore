@@ -1,40 +1,40 @@
 # Node.js dependencies
 node_modules/
+/frontend/node_modules/
+/backend/node_modules/
 
-# Dossier dist (build)
+# Build artifacts
 dist/
-
-# Fichiers de log
+build/
 *.log
 
-# Fichiers d'IDE
-.idea/
-.vscode/
-
-# Fichiers de configuration locaux
-*.env
+# Environment variables
+.env
 .env.local
 .env.*.local
 
-# Fichiers générés par NPM
+# IDE
+.idea/
+.vscode/
+.history
+.DS_Store
+
+# NPM locks (optional - track or ignore per preference)
 package-lock.json
 yarn.lock
 
-# Cache de npm et de vue
+# Cache directories
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .vite/
 
-# Fichiers de test
+# Test coverage
 coverage/
 
-# Dossier temporaire de développement
+# Temporary files
 temp/
-
-# Fichiers de configuration de VSCode (si tu en as)
-.vscode/
-
+.history/
 # Dossier de build généré par Vue CLI (pour la production)
 build/
 

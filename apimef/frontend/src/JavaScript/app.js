@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Document chargé");
-
     const userInfo = document.getElementById("user-info");
     const userName = document.getElementById("user-name");
     const logoutBtn = document.getElementById("logout-btn");
@@ -8,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const connexionLink = document.querySelector("a[href='/connexion']");
 
     const utilisateur = JSON.parse(localStorage.getItem("utilisateur"));
-    console.log("Utilisateur récupéré:", utilisateur);
 
     if (utilisateur) {
         userInfo.style.display = "block";
@@ -18,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
     }
     logoutBtn.addEventListener("click", () => {
-        console.log("Déconnexion en cours...");
         localStorage.removeItem("utilisateur");
         localStorage.removeItem("token");
         alert("Vous êtes déconnecté.");

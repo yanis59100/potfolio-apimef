@@ -1,20 +1,6 @@
 <template>
   <div>
-    <nav aria-label="Navigation principale">
-      <ul>
-        <li><router-link to="/">Accueil</router-link></li>
-        <li><router-link to="/boutique">Boutique</router-link></li>
-        <li><router-link to="/images">Galerie</router-link></li>
-        <li><router-link to="/profil">Profil</router-link></li>
-        <li><router-link to="/contact">Contact</router-link></li>
-        <li><router-link to="/inscription">Inscription</router-link></li>
-        <li><router-link to="/connexion">Connexion</router-link></li>
-        <li v-if="user" id="user-info">
-          Bienvenue, <span>{{ user.name }}</span>!
-          <button @click="logout" id="logout-btn">Déconnexion</button>
-        </li>
-      </ul>
-    </nav>
+    <!-- Navbar moved to global component -->
 
     <div class="container">
       <h1>Inscription</h1>
@@ -68,10 +54,11 @@
 </template>
 
 <script>
+import { API_BASE } from "../config";
 export default {
   data() {
     return {
-      user: null,
+      utilisateur: null,
       form: {
         nom: '',
         prenom: '',
@@ -93,7 +80,7 @@ export default {
       }
 
       try {
-        const response = await fetch("http://localhost:3000/api/register", {
+        const response = await fetch(`${API_BASE}/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -103,20 +90,16 @@ export default {
 
         if (!response.ok) {
           const error = await response.json();
-          console.error("Erreur d'inscription :", error);
           this.showMessage(error.message || "Erreur lors de l'inscription.", "error");
           return;
         }
 
-        // Suppression de la variable `data` non utilisée
-        console.log("Inscription réussie !");
         this.showMessage("Inscription réussie ! Redirection vers la connexion...", "success");
 
         setTimeout(() => {
           this.$router.push("/connexion");
         }, 2000);
       } catch (error) {
-        console.error("Erreur lors de l'inscription :", error);
         this.showMessage("Une erreur est survenue. Veuillez réessayer.", "error");
       }
     },
@@ -127,15 +110,17 @@ export default {
       }, 5000);
     },
     logout() {
-      this.user = null;
+      localStorage.removeItem('utilisateur');
+      localStorage.removeItem('token');
+      this.utilisateur = null;
       this.$router.push('/connexion');
     }
   },
   created() {
     // Vérifie si l'utilisateur est déjà connecté
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      this.user = user;
+    const stored = JSON.parse(localStorage.getItem("utilisateur"));
+    if (stored) {
+      this.utilisateur = stored;
     }
   }
 };

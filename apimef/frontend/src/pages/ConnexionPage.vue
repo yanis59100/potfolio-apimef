@@ -1,22 +1,6 @@
 <template>
   <div>
-    <header>
-      <nav>
-        <ul>
-          <li><a href="/">Accueil</a></li>
-          <li><a href="/boutique">Boutique</a></li>
-          <li><a href="/images">Galerie</a></li>
-          <li><a href="/profil">Profil</a></li>
-          <li><a href="/contact">Contact</a></li>
-          <li><a href="/inscription">Inscription</a></li>
-          <li v-if="!userInfo.isAuthenticated"><a href="/connexion">Connexion</a></li>
-          <li v-if="userInfo.isAuthenticated" id="user-info">
-            Bienvenue, <span>{{ userInfo.name }}</span>!
-            <button @click="logout">Déconnexion</button>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <!-- Navbar moved to global component -->
 
     <main>
       <section class="container">
@@ -57,6 +41,7 @@
 
 <script>
 import { ref, reactive, onMounted } from "vue";
+import { API_BASE } from "../config";
 
 export default {
   name: "ConnexionPage",
@@ -81,7 +66,7 @@ export default {
       }
 
       try {
-        const response = await fetch("http://localhost:3000/api/login", {
+        const response = await fetch(`${API_BASE}/api/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: email.value, password: password.value })

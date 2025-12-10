@@ -1,14 +1,13 @@
+import { API_BASE } from "../config";
+
 export async function connecterUtilisateur(email, password) {
   try {
-    console.log("Tentative de connexion avec email:", email);
-
     if (!email || !password) {
       afficherMessage("Veuillez remplir tous les champs.", "error");
-      console.log("Champs manquants.");
       return false;
     }
 
-    const response = await fetch("http://localhost:3000/api/login", {
+    const response = await fetch(`${API_BASE}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -16,17 +15,13 @@ export async function connecterUtilisateur(email, password) {
       body: JSON.stringify({ email, password }),
     });
 
-    console.log("Réponse obtenue:", response);
-
     if (!response.ok) {
       const error = await response.json();
       afficherMessage(error.message || "Erreur lors de la connexion.", "error");
-      console.log("Erreur de connexion:", error.message);
       return false;
     }
 
     const data = await response.json();
-    console.log("Connexion réussie ! Données utilisateur:", data);
 
     localStorage.setItem("token", data.token);
     localStorage.setItem("utilisateur", JSON.stringify(data.utilisateur));
@@ -39,7 +34,6 @@ export async function connecterUtilisateur(email, password) {
 
     return data.utilisateur;
   } catch (error) {
-    console.error("Erreur lors de la connexion :", error);
     afficherMessage("Une erreur est survenue. Veuillez réessayer.", "error");
     return false;
   }

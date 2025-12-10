@@ -1,64 +1,148 @@
-<img title="Web HBNB" alt="Hbnb" src="./frontend/public/images/apimef.jpg">
+# Apimef - Plateforme E-commerce Apicole
 
-Apimef est un site e-commerce dédié à l'apiculture, où vous pouvez découvrir et acheter divers produits à base de miel. Ce projet vise à promouvoir l'apiculture en offrant une plateforme accessible pour les passionnés et les consommateurs souhaitant se procurer des produits authentiques et de qualité. Vous pourrez naviguer à travers une sélection de miels, de produits dérivés et d'accessoires d'apiculture.
+<img title="Apimef Logo" alt="Apimef" src="./frontend/public/images/apimef.jpg" width="300">
 
-## Fonctionnalités
+Apimef est une plateforme e-commerce moderne dédiée à la vente de produits apicoles (miel, pollen, cire, etc.). 
+Développée avec **Vue.js 3** (frontend) et **Node.js/Express** (backend), elle offre une expérience utilisateur fluide et sécurisée.
 
-- **Catalogue de produits** : Visualisez et explorez une variété de produits à base de miel.
-- **Panier** : Ajoutez des produits à votre panier pour un achat ultérieur.
-- **Paiement sécurisé** : Utilisez Stripe pour des transactions sécurisées.
-- **Interface utilisateur réactive** : Conçu avec Vue.js pour une expérience utilisateur fluide et interactive.
-- **Système d'évaluation** : Laissez des avis et des notes sur les produits.
-- **Blog** : Articles sur l'apiculture, recettes à base de miel et conseils pour les apiculteurs.
+## 🚀 Démarrage Rapide
 
-## Technologies utilisées
+### Prérequis
+- Node.js >= 14
+- MySQL >= 8.0
+- npm
 
-- **Frontend** : 
-  - HTML
-  - CSS
-  - JavaScript
-  - Vue.js
-- **Backend** : 
-  - Node.js
-  - Express
-- **Base de données** : 
-  - MySQL
-- **Paiement** : 
-  - Stripe
-
-## Installation
-
-Pour cloner le dépôt, exécutez la commande suivante dans votre terminal :
+### Installation locale en 3 étapes
 
 ```bash
+# 1. Cloner et entrer dans le répertoire
 git clone https://github.com/yanis59100/potfolio-apimef.git
+cd potfolio-apimef/apimef
+
+# 2. Initialiser la base de données
+mysql -u root -p < backend/database/schema.sql
+
+# 3. Démarrer backend + frontend
+npm install --prefix backend
+npm install --prefix frontend
+npm run start:backend &  # Terminal 1
+npm run start:frontend   # Terminal 2
 ```
 
-## Exécution du serveur
+L'application sera accessible à **http://localhost:8080**
 
-Après avoir cloné le dépôt, naviguez dans le dossier du projet et exécutez le serveur avec les commandes suivantes :
+---
+
+## ✨ Fonctionnalités
+
+- ✅ **Catalogue de produits** : Navigation fluide avec recherche
+- ✅ **Panier persistant** : Stockage local des articles
+- ✅ **Authentification JWT** : Inscription et connexion sécurisées
+- ✅ **Profil utilisateur** : Gestion des données personnelles
+- ✅ **Paiement intégré** : Mode mock Stripe pour développement
+- ✅ **Design responsive** : Mobile-friendly et optimisé
+- ✅ **Galerie d'images** : Présentation visuelle des produits
+- ✅ **Contact** : Formulaire de communication
+
+---
+
+## 🛠️ Stack Technique
+
+### Frontend
+- Vue 3
+- Vue Router 4
+- Axios
+- CSS3
+
+### Backend
+- Node.js
+- Express.js
+- MySQL
+- JWT
+- Bcryptjs
+- Helmet
+
+### Paiement
+- **Dev** : Mock Stripe
+- **Prod** : Stripe réel
+
+---
+
+## 📁 Architecture
+
+Voir [ARCHITECTURE.md](./ARCHITECTURE.md) pour la documentation détaillée.
+
+---
+
+## 🔧 Configuration
+
+**Backend .env** :
+```
+DB_HOST=localhost
+DB_USER=apimef
+DB_PASSWORD=votre_mot_de_passe
+DB_NAME=apimef
+JWT_SECRET=votre_clé_secrète
+STRIPE_MOCK=true
+PORT=3000
+```
+
+**Frontend .env** :
+```
+VUE_APP_API_BASE_URL=http://localhost:3000
+```
+
+---
+
+## 📖 Utilisation
+
+### Utilisateurs
+1. Ouvrir http://localhost:8080
+2. Parcourir la boutique
+3. S'inscrire ou se connecter
+4. Ajouter des produits au panier
+5. Passer commande
+
+### Développeurs
+```bash
+npm run dev              # Démarrer backend + frontend
+npm run start:backend    # Backend seulement
+npm run start:frontend   # Frontend seulement
+npm run build            # Build production
+```
+
+---
+
+## 🗄️ Base de Données
 
 ```bash
-cd potfolio-apimef
-cd apimef
-cd backend
-npm install  # Pour installer les dépendances
-node server.js  # Pour démarrer le serveur
+# Créer la base de données
+mysql -u root -p
+mysql> CREATE DATABASE apimef;
+mysql> USE apimef;
+mysql> source backend/database/schema.sql;
 ```
 
-## Utilisation
+---
 
-Une fois le serveur en cours d'exécution, ouvrez votre navigateur et accédez à [http://localhost:3000](http://localhost:3000) pour utiliser le site. Vous pourrez :
+## 🔒 Sécurité
 
-- Explorer le catalogue de produits.
-- Ajouter des articles à votre panier.
-- Procéder au paiement en utilisant Stripe.
+- ✅ Mots de passe hachés (bcryptjs)
+- ✅ JWT avec expiration
+- ✅ Headers de sécurité (Helmet)
+- ✅ CORS configuré
+- ✅ Validation des entrées
 
+---
 
-## Licence
+## 📜 Licence
 
-Ce projet est sous licence MIT. Consultez le fichier [LICENSE](LICENSE) pour plus d'informations.
+MIT - Voir [LICENSE](./LICENSE)
 
-## Contact
+---
 
-Pour toute question ou suggestion, vous pouvez me contacter à [meftouh.yanis@hotmail.com](meftouh.yanis@hotmail.com).
+## 👤 Auteur
+
+Yanis Meftouh - [meftouh.yanis@hotmail.com](meftouh.yanis@hotmail.com)
+
+**Dernière mise à jour** : 2025-12-10

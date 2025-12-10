@@ -1,39 +1,15 @@
 <template>
   <div id="app">
+    <Navbar />
     <router-view />
   </div>
 </template>
 
 <script>
-import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "./pages/HomePage.vue";
-import BoutiquePage from "./pages/BoutiquePage.vue";
-import ImagesPage from "./pages/ImagesPage.vue";
-import ProfilPage from "./pages/ProfilPage.vue";
-import ContactPage from "./pages/ContactPage.vue";
-import InscriptionPage from "./pages/InscriptionPage.vue";
-import ConnexionPage from "./pages/ConnexionPage.vue";
-import NotFoundPage from "./pages/NotFoundPage.vue";
-
-const routes = [
-  { path: "/", component: HomePage },
-  { path: "/boutique", component: BoutiquePage },
-  { path: "/images", component: ImagesPage },
-  { path: "/profil", component: ProfilPage },
-  { path: "/contact", component: ContactPage },
-  { path: "/inscription", component: InscriptionPage },
-  { path: "/connexion", component: ConnexionPage },
-  { path: "/:catchAll(.*)", component: NotFoundPage }
-];
-
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-});
-
+import Navbar from './components/Navbar.vue';
 export default {
   name: "App",
-  router
+  components: { Navbar }
 };
 </script>
 

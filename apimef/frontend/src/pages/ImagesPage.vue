@@ -1,22 +1,6 @@
 <template>
   <div>
-    <header>
-      <nav aria-label="Navigation principale">
-        <ul>
-          <li><a href="/">Accueil</a></li>
-          <li><a href="/boutique">Boutique</a></li>
-          <li><a href="/images">Galerie</a></li>
-          <li><a href="/profil">Profil</a></li>
-          <li><a href="/contact">Contact</a></li>
-          <li><a href="/inscription">Inscription</a></li>
-          <li><a href="/connexion">Connexion</a></li>
-          <li v-if="utilisateur" id="user-info">
-            Bienvenue, <span id="user-name">{{ utilisateur.nom }}</span>!
-            <button id="logout-btn" @click="logout">Déconnexion</button>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <!-- Navbar moved to global component -->
 
     <main>
       <section>
@@ -64,7 +48,7 @@ export default {
       utilisateur: JSON.parse(localStorage.getItem("utilisateur")),
       images: [
         { src: "/images/apimef.jpg", alt: "Photo d'une ruche", height: 200, width: 200 },
-        { src: "/images/image miel/cire.jpg", alt: "Cire d'abeille en production", height: 200, width: 200 },
+        { src: "/images/image%20miel/cire.jpg", alt: "Cire d'abeille en production", height: 200, width: 200 },
         { src: "/images/lieu1.jpg", alt: "Lieu de production de miel", height: 200, width: 200 },
         { src: "/images/miel.jpg", alt: "Pot de miel récolté", height: 200, width: 200 },
         { src: "/images/ruche.jpg", alt: "Ruche en pleine récolte", height: 200, width: 200 },
@@ -79,7 +63,7 @@ export default {
         { src: "/images/visite.mp4" },
         { src: "/images/preparation.mp4" },
         { src: "/images/ruche5.mp4" },
-        { src: "/images/image miel/210260_small.mp4" }
+        { src: "/images/image%20miel/210260_small.mp4" }
       ]
     };
   },

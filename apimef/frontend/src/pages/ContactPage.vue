@@ -1,22 +1,6 @@
 <template>
   <div>
-    <header>
-      <nav aria-label="Navigation principale">
-        <ul>
-          <li><router-link to="/">Accueil</router-link></li>
-          <li><router-link to="/boutique">Boutique</router-link></li>
-          <li><router-link to="/images">Galerie</router-link></li>
-          <li><router-link to="/profil">Profil</router-link></li>
-          <li><router-link to="/contact">Contact</router-link></li>
-          <li v-if="!utilisateur"><router-link to="/inscription">Inscription</router-link></li>
-          <li v-if="!utilisateur"><router-link to="/connexion">Connexion</router-link></li>
-          <li v-if="utilisateur" id="user-info">
-            Bienvenue, <span>{{ utilisateur.nom }}</span>!
-            <button @click="logout" id="logout-btn">Déconnexion</button>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <!-- Navbar moved to global component -->
 
     <main>
       <section id="info-entreprise">
@@ -89,7 +73,6 @@ export default {
     },
     submitForm() {
       // Traitement du formulaire
-      console.log('Formulaire soumis', this.formData);
       // Vous pouvez envoyer les données via une API ici
     }
   }

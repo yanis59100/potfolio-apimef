@@ -12,12 +12,6 @@ const ProfilPage = () => import('./pages/ProfilPage.vue');
 const NotFoundPage = () => import('./pages/NotFoundPage.vue');
 
 import './css/styles.css';
-import './css/images.css';
-import './css/inscription.css';
-import './css/connexion.css';
-import './css/contact.css';
-import './css/boutique.css';
-import './css/profil.css';
 
 const routes = [
   { path: '/', component: HomePage },

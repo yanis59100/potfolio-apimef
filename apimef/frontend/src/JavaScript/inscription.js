@@ -1,3 +1,5 @@
+import { API_BASE } from "../config";
+
 export async function inscrireUtilisateur(
   nom,
   prenom,
@@ -9,16 +11,12 @@ export async function inscrireUtilisateur(
   confirmPassword
 ) {
   try {
-    console.log("Tentative d'inscription...");
-
     if (password !== confirmPassword) {
       afficherMessage("Les mots de passe ne correspondent pas.", "error");
       return false;
     }
 
-    console.log("Envoi de la requête d'inscription...");
-
-    const response = await fetch("http://localhost:3000/api/register", {
+    const response = await fetch(`${API_BASE}/api/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,13 +34,11 @@ export async function inscrireUtilisateur(
 
     if (!response.ok) {
       const error = await response.json();
-      console.error("Erreur d'inscription :", error);
       afficherMessage(error.message || "Erreur lors de l'inscription.", "error");
       return false;
     }
 
     const data = await response.json();
-    console.log("Inscription réussie !");
 
     afficherMessage("Inscription réussie ! Redirection vers la connexion...", "success");
 
@@ -52,7 +48,6 @@ export async function inscrireUtilisateur(
 
     return data;
   } catch (error) {
-    console.error("Erreur lors de l'inscription :", error);
     afficherMessage("Une erreur est survenue. Veuillez réessayer.", "error");
     return false;
   }

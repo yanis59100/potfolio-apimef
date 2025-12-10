@@ -1,27 +1,13 @@
 <template>
   <div id="app">
-    <nav aria-label="Navigation principale">
-      <ul>
-        <li><router-link to="/">Accueil</router-link></li>
-        <li><router-link to="/boutique">Boutique</router-link></li>
-        <li><router-link to="/images">Galerie</router-link></li>
-        <li><router-link to="/profil">Profil</router-link></li>
-        <li><router-link to="/contact">Contact</router-link></li>
-        <li v-if="!user"><router-link to="/inscription">Inscription</router-link></li>
-        <li v-if="!user"><router-link to="/connexion">Connexion</router-link></li>
-        <li v-if="user" id="user-info">
-          Bienvenue, {{ user.nom }} !
-          <button @click="logout">Déconnexion</button>
-        </li>
-      </ul>
-    </nav>
+    <!-- Navbar moved to global component -->
 
     <header id="home" role="banner">
       <div class="container">
-        <img src="/images/image miel/abeilles.jpg" alt="Des abeilles butinant sur des fleurs" loading="lazy" />
-        <img src="/images/image miel/cadre.jpg" alt="Un cadre de ruche avec des abeilles" loading="lazy" />
-        <img src="/images/image miel/miel.jpg" alt="Pot de miel biologique" loading="lazy" />
-        <img src="/images/image miel/pollen.jpg" alt="Pollen récolté par les abeilles" loading="lazy" />
+        <img src="/images/image%20miel/abeilles.jpg" alt="Des abeilles butinant sur des fleurs" loading="lazy" />
+        <img src="/images/image%20miel/cadre.jpg" alt="Un cadre de ruche avec des abeilles" loading="lazy" />
+        <img src="/images/image%20miel/miel.jpg" alt="Pot de miel biologique" loading="lazy" />
+        <img src="/images/image%20miel/pollen.jpg" alt="Pollen récolté par les abeilles" loading="lazy" />
       </div>
     </header>
 

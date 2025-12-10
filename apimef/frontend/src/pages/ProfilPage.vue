@@ -1,20 +1,6 @@
 <template>
   <div>
-    <nav aria-label="Navigation principale">
-      <ul>
-        <li><router-link to="/">Accueil</router-link></li>
-        <li><router-link to="/boutique">Boutique</router-link></li>
-        <li><router-link to="/images">Galerie</router-link></li>
-        <li><router-link to="/profil">Profil</router-link></li>
-        <li><router-link to="/contact">Contact</router-link></li>
-        <li v-if="!user"><router-link to="/inscription">Inscription</router-link></li>
-        <li v-if="!user"><router-link to="/connexion">Connexion</router-link></li>
-        <li v-if="user" id="user-info">
-          Bienvenue, <span>{{ user.nom }}</span> !
-          <button @click="logout" id="logout-btn">Déconnexion</button>
-        </li>
-      </ul>
-    </nav>
+    <!-- Navbar moved to global component -->
 
     <main id="profil-container">
       <h1>Mon Profil</h1>
@@ -84,7 +70,6 @@ export default {
   methods: {
     saveChanges() {
       // Sauvegarder les modifications
-      console.log('Modifications sauvegardées', this.form);
     },
     logout() {
       localStorage.removeItem('utilisateur');
