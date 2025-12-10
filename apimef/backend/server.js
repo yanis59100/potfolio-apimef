@@ -37,7 +37,7 @@ app.use(express.json());
 // Fichiers statiques
 app.use("/css", express.static(path.join(__dirname, "../frontend/src/css")));
 app.use("/js", express.static(path.join(__dirname, "../frontend/src/JavaScript")));
-app.use(express.static(path.join(__dirname, "../frontend/public")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 // Connexion MySQL
 const db = mysql.createConnection({
@@ -55,16 +55,16 @@ db.connect((err) => {
   console.log("Connecté à la base de données MySQL");
 });
 
-// Routes HTML
-const htmlPages = ["boutique", "connexion", "inscription", "contact", "images", "profil"];
-htmlPages.forEach((page) => {
-  app.get(`/${page}`, (req, res) => {
-    res.sendFile(path.join(__dirname, `../frontend/public/${page}.html`));
-  });
-});
+// Routes HTML (disabled for Vue SPA)
+// const htmlPages = ["boutique", "connexion", "inscription", "contact", "images", "profil"];
+// htmlPages.forEach((page) => {
+//   app.get(`/${page}`, (req, res) => {
+//     res.sendFile(path.join(__dirname, `../frontend/public/${page}.html`));
+//   });
+// });
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/public/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 // 🔥 Récupération des produits Stripe (ou mock si Stripe indisponible)
@@ -104,18 +104,18 @@ app.get("/api/products", async (req, res) => {
 app.post("/create-checkout-session", async (req, res) => {
   const { line_items } = req.body;
 
-  // If Stripe is enabled, require a valid JWT (same as authMiddleware)
-  if (useStripe) {
+  // Optional: Check token if provided, but don't require it (guest checkout allowed)
+  if (req.headers.authorization) {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Vous devez être connecté pour accéder à cette ressource." });
-    }
-    const token = authHeader.split(" ")[1];
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;
-    } catch (err) {
-      return res.status(401).json({ error: "Token invalide ou expiré." });
+    if (authHeader.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+      } catch (err) {
+        // Token is invalid, but we still allow guest checkout
+        console.warn("Invalid token provided, proceeding with guest checkout");
+      }
     }
   }
 
@@ -251,6 +251,11 @@ app.post("/api/login", (req, res) => {
 app.use((err, req, res, next) => {
   console.error("Erreur survenue :", err.message);
   res.status(err.status || 500).json({ message: "Une erreur interne est survenue." });
+});
+
+// SPA Fallback: serve index.html for all unknown routes (Vue Router will handle client-side routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 // 🚀 Lancement du serveur

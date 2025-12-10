@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <!-- Navbar moved to global component -->
-
     <header id="home" role="banner">
       <div class="container">
         <img src="/images/image%20miel/abeilles.jpg" alt="Des abeilles butinant sur des fleurs" loading="lazy" />
@@ -12,7 +10,8 @@
     </header>
 
     <section id="introduction">
-      <h1>Bienvenue sur Apimef</h1>
+      <img src="/images/apimef.jpg" alt="Apimef Logo" class="hero-logo" />
+      <h1>🍯 Bienvenue sur Apimef 🐝</h1>
       <p>
         Apimef vous présente l'univers de l'apiculture et vous propose du miel
         100% français, directement issu de nos ruches. Notre miel est
@@ -22,7 +21,7 @@
     </section>
 
     <section id="a-propos">
-      <h2>À propos de Apimef</h2>
+      <h2>🌿 À propos de Apimef</h2>
       <p>
         Chez Apimef, nous mettons un point d'honneur à cultiver l'amour de
         l'apiculture durable. Nous croyons fermement que les abeilles jouent un
@@ -35,7 +34,7 @@
 
     <section id="valeurs">
       <div>
-        <h3>Respect de l'environnement</h3>
+        <h3>🌍 Respect de l'environnement</h3>
         <p>
           Nous croyons en une apiculture responsable, respectueuse de
           l'environnement. Nos pratiques visent à préserver la biodiversité et
@@ -44,7 +43,7 @@
         </p>
       </div>
       <div>
-        <h3>Qualité et Authenticité</h3>
+        <h3>✨ Qualité et Authenticité</h3>
         <p>
           Notre miel est 100% biologique, récolté avec soin dans nos ruches.
           Chaque pot contient un produit pur, sans ajout d'additifs, pour une
@@ -52,7 +51,7 @@
         </p>
       </div>
       <div>
-        <h3>Transparence</h3>
+        <h3>🔍 Transparence</h3>
         <p>
           Nous vous offrons une transparence totale sur l'origine de nos
           produits. Vous pouvez suivre toute la chaîne de production, de la
@@ -62,271 +61,180 @@
       </div>
     </section>
 
-    <footer role="contentinfo">
-      <p>
-        Vous avez une question ?
-        <a href="mailto:8845@holbertonstudents.com">Contactez-nous</a>
-      </p>
-      <p>&copy; 2024 Apimef. Tous droits réservés.</p>
-      <p>Suivez-nous sur :</p>
-      <ul>
-        <li>
-          <a href="https://facebook.com/Apimef" target="_blank" aria-label="Suivre Apimef sur Facebook">Facebook</a>
-        </li>
-        <li>
-          <a href="https://instagram.com/Apimef" target="_blank" aria-label="Suivre Apimef sur Instagram">Instagram</a>
-        </li>
-      </ul>
-    </footer>
+    <AppFooter />
   </div>
 </template>
 
 <script>
+import { computed } from 'vue';
+import AppFooter from '../components/AppFooter.vue';
+
 export default {
-  name: "App",
-  data() {
+  name: 'HomePage',
+  components: {
+    AppFooter
+  },
+  setup() {
+    /**
+     * Compute user from localStorage
+     * Returns null if no user is stored
+     */
+    const user = computed(() => {
+      try {
+        return JSON.parse(localStorage.getItem('utilisateur')) || null;
+      } catch {
+        return null;
+      }
+    });
+
     return {
-      user: JSON.parse(localStorage.getItem("utilisateur")),
+      user
     };
-  },
-  methods: {
-    logout() {
-      localStorage.removeItem("utilisateur");
-      localStorage.removeItem("token");
-      alert("Vous êtes déconnecté.");
-      this.$router.go(0);
-    },
-  },
+  }
 };
 </script>
 
-<style>
-:root {
-  --primary-color: #f1c40f;
-  --secondary-color: #2c3e50;
-  --accent-color: #e67e22;
-  --background-color: #ecf0f1;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: var(--background-color);
-  margin: 0;
-  padding: 0;
-  color: #ffffff;
-}
-
-nav {
-  background-color: var(--secondary-color);
-  padding: 15px 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-nav ul {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-nav li {
-  margin: 0 20px;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 15px;
-  border-radius: 5px;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-nav a:hover {
-  background: var(--primary-color);
-  transform: scale(1.1);
-}
-
-#user-info {
-  display: none;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-#logout-btn {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  margin-left: 10px;
-}
-
-#logout-btn:hover {
-  background-color: var(--primary-color);
-}
-
-header {
-  position: relative;
-  overflow: hidden;
-}
-
-header .container {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  animation: fadeIn 1s ease-in-out;
-}
-
-header img {
-  width: 24%;
-  height: auto;
-  border-radius: 8px;
-  transition: transform 0.5s ease;
-}
-
-header img:hover {
-  transform: scale(1.1);
-}
-
-#home {
-  background-color: var(--background-color);
+<style scoped>
+#app {
+  width: 100%;
 }
 
 #introduction {
-  padding: 40px;
-  background-color: #fff;
   text-align: center;
-  border-bottom: 1px solid #ddd;
-  animation: slideUp 1s ease-in-out;
+  background: linear-gradient(135deg, var(--color-pollen) 0%, var(--color-wax) 100%);
+  padding: var(--spacing-3xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-base);
+}
+
+.hero-logo {
+  height: 80px;
+  width: auto;
+  margin-bottom: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 #introduction h1 {
-  font-size: 36px;
-  color: var(--primary-color);
+  font-size: var(--font-size-4xl);
+  color: var(--color-honey-dark);
+  margin-bottom: var(--spacing-xl);
 }
 
 #introduction p {
-  font-size: 18px;
-  max-width: 800px;
-  margin: 20px auto;
-  color: var(--secondary-color);
+  font-size: var(--font-size-lg);
+  max-width: 900px;
+  margin: 0 auto var(--spacing-xl);
+  color: var(--color-dark-gray);
+  line-height: 1.8;
 }
 
 #a-propos {
-  padding: 40px;
-  background-color: var(--primary-color);
-  color: white;
   text-align: center;
-  animation: fadeIn 1.5s ease-in-out;
+  background: linear-gradient(135deg, var(--color-honey-light) 0%, var(--color-pollen) 100%);
+  border: 2px solid var(--color-honey-dark);
 }
 
 #a-propos h2 {
-  font-size: 32px;
-  margin-bottom: 20px;
+  color: var(--color-honey-dark);
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-xl);
 }
 
 #a-propos p {
-  font-size: 18px;
-  max-width: 800px;
+  font-size: var(--font-size-lg);
+  max-width: 900px;
   margin: 0 auto;
+  color: var(--color-bee);
+  line-height: 1.8;
 }
 
 #valeurs {
-  display: flex;
-  justify-content: space-between;
-  padding: 40px;
-  background-color: #f9f9f9;
-  animation: slideUp 1.5s ease-in-out;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-2xl);
+  animation: none;
 }
 
 #valeurs div {
-  width: 30%;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
+  background: var(--color-white);
+  padding: var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-base);
+  border-left: 4px solid var(--color-honey-dark);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+#valeurs div::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-honey-dark), var(--color-honey-light));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 #valeurs div:hover {
-  transform: scale(1.05);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-honey);
+  border-left-color: var(--color-honey-light);
 }
 
 #valeurs h3 {
-  color: var(--accent-color);
+  color: var(--color-honey-dark);
+  font-size: var(--font-size-2xl);
+  margin-top: 0;
+  margin-bottom: var(--spacing-lg);
+  font-family: var(--font-secondary);
 }
 
 #valeurs p {
-  color: var(--secondary-color);
+  color: var(--color-dark-gray);
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+  margin-bottom: 0;
 }
 
-footer {
-  padding: 20px;
-  background-color: var(--secondary-color);
-  color: white;
-  text-align: center;
-  animation: fadeIn 2.5s ease-in-out;
-}
-
-footer p,
-footer a {
-  font-size: 16px;
-}
-
-footer a {
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-footer a:hover {
-  color: var(--accent-color);
-}
-
-
-button {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: var(--primary-color);
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
+@media (max-width: 1024px) {
+  #introduction h1 {
+    font-size: var(--font-size-3xl);
   }
-  100% {
-    opacity: 1;
+
+  #a-propos h2 {
+    font-size: var(--font-size-2xl);
   }
 }
 
-@keyframes slideUp {
-  0% {
-    transform: translateY(20px);
-    opacity: 0;
+@media (max-width: 768px) {
+  #introduction h1 {
+    font-size: var(--font-size-2xl);
   }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
+
+  #introduction p {
+    font-size: var(--font-size-base);
+  }
+
+  #a-propos h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  #a-propos p {
+    font-size: var(--font-size-sm);
+  }
+
+  #valeurs {
+    gap: var(--spacing-xl);
+  }
+
+  #valeurs div {
+    padding: var(--spacing-xl);
+  }
+
+  #valeurs h3 {
+    font-size: var(--font-size-xl);
   }
 }
 </style>

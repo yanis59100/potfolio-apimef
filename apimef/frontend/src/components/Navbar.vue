@@ -2,7 +2,10 @@
   <header class="site-header">
     <nav class="navbar">
       <div class="nav-left">
-        <router-link to="/" class="logo">Apimef</router-link>
+        <router-link to="/" class="logo-link">
+          <img src="/images/apimef.jpg" alt="Apimef Logo" class="logo-img" />
+          <span class="logo-text">Apimef</span>
+        </router-link>
       </div>
 
       <ul class="nav-links">
@@ -13,7 +16,7 @@
 
       <div class="nav-right">
         <div v-if="utilisateur" class="user-area">
-          <span class="welcome">Bienvenue, {{ utilisateur.nom }}</span>
+          <router-link to="/profil" class="welcome-link">Bienvenue, {{ utilisateur.nom }}</router-link>
           <button class="btn-logout" @click="logout">Déconnexion</button>
         </div>
         <div v-else class="auth-links">
@@ -26,7 +29,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
@@ -53,10 +56,26 @@ export default {
       setTimeout(() => window.location.reload(), 300);
     };
 
+    // Watch for localStorage changes from other components (e.g., ProfilPage logout)
+    const handleStorageChange = (event) => {
+      if (event.key === 'utilisateur' && !event.newValue) {
+        utilisateur.value = null;
+      }
+    };
+
     onMounted(() => {
       loadUser();
-      // listen to storage events from other tabs
+      // Listen to storage events from other tabs and logout from other components
       window.addEventListener('storage', loadUser);
+      window.addEventListener('storage', handleStorageChange);
+      // Also listen for custom events from same page logout
+      window.addEventListener('user:logout', loadUser);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('storage', loadUser);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('user:logout', loadUser);
     });
 
     return { utilisateur, logout };
@@ -67,12 +86,15 @@ export default {
 <style scoped>
 .site-header { background: linear-gradient(90deg, #2c3e50, #243141); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 .navbar { display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:12px 20px; }
-.logo { color: var(--primary-color); font-weight:700; font-size:1.4rem; }
+.logo-link { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.logo-img { height: 40px; width: auto; border-radius: 6px; }
+.logo-text { color: var(--primary-color); font-weight: 700; font-size: 1.4rem; }
 .nav-links { list-style:none; display:flex; gap:12px; margin:0; padding:0; }
 .nav-links a { color:#fff; padding:6px 10px; border-radius:6px; transition:transform .18s ease, background .18s ease; }
 .nav-links a:hover { background: rgba(255,255,255,0.06); transform:translateY(-2px); }
 .nav-right { display:flex; align-items:center; gap:10px; }
-.welcome { color: #fff; margin-right:8px; font-weight:600; }
+.welcome-link { color: #fff; margin-right:8px; font-weight:600; text-decoration: none; padding: 6px 10px; border-radius: 6px; transition: all .18s ease; cursor: pointer; }
+.welcome-link:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
 .btn-logout { background: transparent; color: #fff; border:1px solid rgba(255,255,255,0.18); padding:6px 10px; border-radius:6px; cursor:pointer; transition:all .18s; }
 .btn-logout:hover { background:#fff; color:var(--secondary-color); transform:translateY(-2px); }
 .auth { color:#fff; margin-left:8px; padding:6px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); }

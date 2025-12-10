@@ -24,28 +24,20 @@
       </section>
     </main>
 
-    <footer>
-      <p>
-        Vous avez une question ?
-        <a href="mailto:8845@holbertonstudents.com">Contactez-nous</a>
-      </p>
-      <p>&copy; 2024 Apimef. Tous droits réservés.</p>
-      <p>Suivez-nous sur :</p>
-      <ul>
-        <li><a href="https://facebook.com/Apimef" target="_blank">Facebook</a></li>
-        <li><a href="https://instagram.com/Apimef" target="_blank">Instagram</a></li>
-      </ul>
-    </footer>
+    <AppFooter />
   </div>
 </template>
 
 <script>
 import { ref, reactive, onMounted } from "vue";
+import AppFooter from '../components/AppFooter.vue';
 import { API_BASE } from "../config";
 
 export default {
   name: "ConnexionPage",
-
+  components: {
+    AppFooter
+  },
   setup() {
     // Déclaration des variables réactives
     const email = ref("");
@@ -123,111 +115,38 @@ export default {
 </script>
 
 <style scoped>
-:root {
-  --primary-color: #f1c40f;
-  --secondary-color: #2c3e50;
-  --accent-color: #e67e22;
-  --background-color: #ecf0f1;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: var(--background-color);
-  margin: 0;
-  padding: 0;
-  color: #ffffff;
-}
-
-nav {
-  background-color: var(--secondary-color);
-  padding: 15px 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-nav ul {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-nav li {
-  margin: 0 20px;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 15px;
-  border-radius: 5px;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-nav a:hover {
-  background: var(--primary-color);
-  transform: scale(1.1);
-}
-
-#user-info {
-  display: none;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-#logout-btn {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  margin-left: 10px;
-}
-
-#logout-btn:hover {
-  background-color: var(--primary-color);
-}
-
 main {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: var(--background-color);
-  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-light-gray) 0%, var(--color-wax) 100%);
+  padding: var(--spacing-2xl);
 }
 
 .container {
-  background-color: white;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--color-white);
+  padding: var(--spacing-3xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   text-align: center;
-  animation: fadeInUp 1s ease-out;
+  animation: fadeInUp 0.8s ease-out;
+  border-top: 4px solid var(--color-honey-dark);
 }
 
 h1 {
-  font-size: 28px;
-  color: var(--primary-color);
-  margin-bottom: 20px;
+  font-size: var(--font-size-2xl);
+  color: var(--color-honey-dark);
+  margin-bottom: var(--spacing-2xl);
+  font-family: var(--font-secondary);
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--spacing-xl);
 }
 
 form div {
@@ -235,110 +154,83 @@ form div {
 }
 
 form label {
-  font-size: 16px;
-  font-weight: bold;
-  color: var(--secondary-color);
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-bee);
+  margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 form input {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid var(--secondary-color);
-  border-radius: 4px;
-  transition: border-color 0.3s ease;
+  padding: var(--spacing-base) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  border: 2px solid var(--color-medium-gray);
+  border-radius: var(--radius-base);
+  transition: all var(--transition-base);
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--font-primary);
 }
 
 form input:focus {
-  border-color: var(--primary-color);
+  outline: none;
+  border-color: var(--color-honey-dark);
+  box-shadow: 0 0 0 3px rgba(139, 105, 20, 0.1);
+  background: var(--color-wax);
+}
+
+form input::placeholder {
+  color: var(--color-medium-gray);
 }
 
 button {
-  padding: 12px;
-  font-size: 16px;
-  background-color: var(--primary-color);
-  color: white;
+  padding: var(--spacing-base) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  background: linear-gradient(135deg, var(--color-honey-dark) 0%, var(--color-honey-medium) 100%);
+  color: var(--color-white);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all var(--transition-base);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-md);
 }
 
 button:hover {
-  background-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 #errorMessage {
-  margin-top: 20px;
-  color: red;
-  font-size: 14px;
+  margin-top: var(--spacing-lg);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  animation: slideInDown 0.3s ease-out;
 }
 
-.footer {
-  margin-top: 20px;
-  font-size: 14px;
-  color: var(--secondary-color);
-}
-
-.footer a {
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer a:hover {
-  color: var(--accent-color);
-}
-
-footer {
-  padding: 20px;
-  background-color: var(--secondary-color);
-  color: white;
-  text-align: center;
-  animation: fadeIn 2s ease-in-out;
-}
-
-footer p, footer a {
-  font-size: 16px;
-}
-
-footer a {
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-footer a:hover {
-  color: var(--accent-color);
-}
-
-footer ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-footer li {
-  display: inline;
-  margin: 0 10px;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-2xl);
   }
-  100% {
-    opacity: 1;
+
+  h1 {
+    font-size: var(--font-size-xl);
   }
 }
 
-@keyframes fadeInUp {
-  0% {
-    transform: translateY(20px);
-    opacity: 0;
+@media (max-width: 480px) {
+  main {
+    padding: var(--spacing-lg);
   }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
+
+  .container {
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-base);
   }
 }
 </style>

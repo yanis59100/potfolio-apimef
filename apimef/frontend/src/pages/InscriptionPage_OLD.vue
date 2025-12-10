@@ -1,5 +1,7 @@
 <template>
   <div>
+    <!-- Navbar moved to global component -->
+
     <div class="container">
       <h1>Inscription</h1>
       <p>Créez un compte pour accéder à notre boutique.</p>
@@ -37,47 +39,43 @@
       </div>
     </div>
 
-    <AppFooter />
+    <footer role="contentinfo">
+      <p>
+        Vous avez une question ? <a href="mailto:8845@holbertonstudents.com">Contactez-nous</a>
+      </p>
+      <p>&copy; 2024 Apimef. Tous droits réservés.</p>
+      <p>Suivez-nous sur :</p>
+      <ul>
+        <li><a href="https://facebook.com/Apimef" target="_blank" aria-label="Suivre Apimef sur Facebook">Facebook</a></li>
+        <li><a href="https://instagram.com/Apimef" target="_blank" aria-label="Suivre Apimef sur Instagram">Instagram</a></li>
+      </ul>
+    </footer>
   </div>
 </template>
 
 <script>
-import { ref, reactive } from 'vue';
-import AppFooter from '../components/AppFooter.vue';
-import { useRouter } from 'vue-router';
 import { API_BASE } from "../config";
-
 export default {
-  name: 'InscriptionPage',
-  components: {
-    AppFooter
-  },
-  setup() {
-    const router = useRouter();
-    const message = ref(null);
-    const form = reactive({
-      nom: '',
-      prenom: '',
-      adresse: '',
-      ville: '',
-      code_postal: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    });
-
-    const showMessage = (text, type) => {
-      message.value = { text, type };
-      if (type === "success") {
-        setTimeout(() => {
-          message.value = null;
-        }, 3000);
-      }
+  data() {
+    return {
+      utilisateur: null,
+      form: {
+        nom: '',
+        prenom: '',
+        adresse: '',
+        ville: '',
+        code_postal: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      },
+      message: null
     };
-
-    const submitForm = async () => {
-      if (form.password !== form.confirmPassword) {
-        showMessage("Les mots de passe ne correspondent pas.", "error");
+  },
+  methods: {
+    async submitForm() {
+      if (this.form.password !== this.form.confirmPassword) {
+        this.showMessage("Les mots de passe ne correspondent pas.", "error");
         return;
       }
 
@@ -87,26 +85,43 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(form),
+          body: JSON.stringify(this.form),
         });
 
         if (!response.ok) {
           const error = await response.json();
-          showMessage(error.message || "Erreur lors de l'inscription.", "error");
+          this.showMessage(error.message || "Erreur lors de l'inscription.", "error");
           return;
         }
 
-        showMessage("Inscription réussie ! Redirection vers la connexion...", "success");
+        this.showMessage("Inscription réussie ! Redirection vers la connexion...", "success");
 
         setTimeout(() => {
-          router.push("/connexion");
+          this.$router.push("/connexion");
         }, 2000);
       } catch (error) {
-        showMessage("Une erreur est survenue. Veuillez réessayer.", "error");
+        this.showMessage("Une erreur est survenue. Veuillez réessayer.", "error");
       }
-    };
-
-    return { form, message, submitForm };
+    },
+    showMessage(message, type) {
+      this.message = { text: message, type };
+      setTimeout(() => {
+        this.message = null;
+      }, 5000);
+    },
+    logout() {
+      localStorage.removeItem('utilisateur');
+      localStorage.removeItem('token');
+      this.utilisateur = null;
+      this.$router.push('/connexion');
+    }
+  },
+  created() {
+    // Vérifie si l'utilisateur est déjà connecté
+    const stored = JSON.parse(localStorage.getItem("utilisateur"));
+    if (stored) {
+      this.utilisateur = stored;
+    }
   }
 };
 </script>
@@ -119,14 +134,81 @@ export default {
   --background-color: #ecf0f1;
 }
 
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background-color);
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background-color: var(--secondary-color);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  margin: 0 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+nav a:hover {
+  background: var(--primary-color);
+  transform: scale(1.1);
+}
+
+#user-info {
+  display: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#logout-btn {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+#logout-btn:hover {
+  background-color: var(--primary-color);
+}
+
 .container {
   width: 80%;
-  max-width: 600px;
-  margin: 30px auto;
+  margin: 0 auto;
   padding: 20px;
   background-color: white;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  margin-top: 30px;
   animation: slideUp 1s ease-in-out;
 }
 
@@ -138,7 +220,7 @@ h1 {
 }
 
 p {
-  color: #666;
+  color: var(--background-color);
   text-align: center;
   font-size: 16px;
   margin-bottom: 20px;
@@ -150,29 +232,29 @@ form {
   gap: 15px;
 }
 
-label {
-  font-size: 14px;
+form label {
+  font-size: 16px;
   font-weight: bold;
-  color: var(--secondary-color);
 }
 
-input {
+form input {
   padding: 10px;
   font-size: 16px;
-  border: 2px solid #ddd;
+  border: 2px solid var(--secondary-color);
   border-radius: 4px;
+  margin-bottom: 10px;
   transition: border-color 0.3s ease;
 }
 
-input:focus {
+form input:focus {
   border-color: var(--primary-color);
   outline: none;
 }
 
-button {
+form button {
   background-color: var(--secondary-color);
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   padding: 12px;
   border: none;
   border-radius: 4px;
@@ -180,27 +262,24 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+form button:hover {
   background-color: var(--accent-color);
 }
 
 #message-box {
   margin-top: 15px;
-  padding: 12px;
+  padding: 10px;
   text-align: center;
-  border-radius: 4px;
 }
 
 #message-box.success {
   background-color: #d4edda;
   color: #155724;
-  border: 1px solid #c3e6cb;
 }
 
 #message-box.error {
   background-color: #f8d7da;
   color: #721c24;
-  border: 1px solid #f5c6cb;
 }
 
 footer {
@@ -208,11 +287,10 @@ footer {
   background-color: var(--secondary-color);
   color: white;
   text-align: center;
-  margin-top: 30px;
 }
 
 footer p, footer a {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 footer a {
@@ -228,38 +306,10 @@ footer a:hover {
 footer ul {
   list-style-type: none;
   padding: 0;
-  margin: 10px 0;
 }
 
 footer li {
   display: inline;
   margin: 0 10px;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    width: 90%;
-    margin: 20px auto;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  input, button {
-    font-size: 14px;
-    padding: 10px;
-  }
 }
 </style>

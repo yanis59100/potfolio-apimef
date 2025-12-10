@@ -1,272 +1,172 @@
 <template>
   <div>
-    <!-- Navbar moved to global component -->
-
     <main>
       <section>
-        <h3>Galerie d'Images</h3>
-        <p>Explorez notre galerie de photos qui vous plonge dans l'univers fascinant de l'apiculture, de la production de miel et de nos abeilles en action.</p>
+        <h2>🖼️ Galerie d'Images</h2>
+        <p>Explorez notre galerie de photos qui vous plonge dans l'univers de l'apiculture, de la production de miel et de nos abeilles en action.</p>
 
         <div class="container">
-          <figure v-for="(image, index) in images" :key="index">
-            <img :src="image.src" :alt="image.alt" :height="image.height" :width="image.width">
+          <figure v-for="(image, index) in images" :key="`img-${index}`">
+            <img :src="image.src" :alt="image.alt" loading="lazy" />
           </figure>
         </div>
 
-        <h3>Vidéo</h3>
+        <h2>🎬 Vidéos</h2>
         <p>Découvrez nos vidéos exclusives montrant les différentes étapes de la production de miel et des visites guidées de notre ferme apicole.</p>
 
         <div class="container">
-          <figure v-for="(video, index) in videos" :key="index">
-            <video :src="video.src" height="200" controls muted loop></video>
+          <figure v-for="(video, index) in videos" :key="`video-${index}`">
+            <video :src="video.src" height="200" controls muted></video>
           </figure>
         </div>
       </section>
     </main>
 
-    <footer role="contentinfo">
-      <p>
-        Vous avez une question ? <a href="mailto:8845@holbertonstudents.com">Contactez-nous</a>
-      </p>
-      <p>&copy; 2024 Apimef. Tous droits réservés.</p>
-      <p>Suivez-nous sur :</p>
-      <ul>
-        <li><a href="https://facebook.com/Apimef" target="_blank" rel="noopener noreferrer">Facebook</a></li>
-        <li><a href="https://instagram.com/Apimef" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-      </ul>
-      <div>
-        <a href="politique-de-confidentialite.html">Politique de confidentialité</a> | <a href="termes-et-conditions.html">Termes et conditions</a>
-      </div>
-    </footer>
+    <AppFooter />
   </div>
 </template>
 
 <script>
+import { ref } from 'vue';
+import AppFooter from '../components/AppFooter.vue';
+
 export default {
-  data() {
-    return {
-      utilisateur: JSON.parse(localStorage.getItem("utilisateur")),
-      images: [
-        { src: "/images/apimef.jpg", alt: "Photo d'une ruche", height: 200, width: 200 },
-        { src: "/images/image%20miel/cire.jpg", alt: "Cire d'abeille en production", height: 200, width: 200 },
-        { src: "/images/lieu1.jpg", alt: "Lieu de production de miel", height: 200, width: 200 },
-        { src: "/images/miel.jpg", alt: "Pot de miel récolté", height: 200, width: 200 },
-        { src: "/images/ruche.jpg", alt: "Ruche en pleine récolte", height: 200, width: 200 },
-        { src: "/images/ruche1.jpg", alt: "Ruche dans la nature", height: 200, width: 200 },
-        { src: "/images/vente.jpg", alt: "Vente de miel", height: 200, width: 200 },
-        { src: "/images/visite.jpg", alt: "Visite guidée de la ferme apicole", height: 200, width: 200 },
-        { src: "/images/visite1.jpg", alt: "Visite des ruches", height: 200, width: 200 }
-      ],
-      videos: [
-        { src: "/images/intro.mp4" },
-        { src: "/images/extraction.mp4" },
-        { src: "/images/visite.mp4" },
-        { src: "/images/preparation.mp4" },
-        { src: "/images/ruche5.mp4" },
-        { src: "/images/image%20miel/210260_small.mp4" }
-      ]
-    };
+  name: 'ImagesPage',
+  components: {
+    AppFooter
   },
-  methods: {
-    logout() {
-      localStorage.removeItem("utilisateur");
-      localStorage.removeItem("token");
-      alert("Vous êtes déconnecté.");
-      window.location.href = "/";
-    }
+  setup() {
+    const images = ref([
+      { src: '/images/apimef.jpg', alt: 'Photo d\'une ruche' },
+      { src: '/images/image%20miel/cire.jpg', alt: 'Cire d\'abeille en production' },
+      { src: '/images/lieu1.jpg', alt: 'Lieu de production de miel' },
+      { src: '/images/miel.jpg', alt: 'Pot de miel récolté' },
+      { src: '/images/ruche.jpg', alt: 'Ruche en pleine récolte' },
+      { src: '/images/ruche1.jpg', alt: 'Ruche dans la nature' },
+      { src: '/images/vente.jpg', alt: 'Vente de miel' },
+      { src: '/images/visite.jpg', alt: 'Visite guidée de la ferme apicole' },
+      { src: '/images/visite1.jpg', alt: 'Visite des ruches' }
+    ]);
+
+    const videos = ref([
+      { src: '/images/intro.mp4' },
+      { src: '/images/extraction.mp4' },
+      { src: '/images/visite.mp4' },
+      { src: '/images/preparation.mp4' },
+      { src: '/images/ruche5.mp4' }
+    ]);
+
+    return {
+      images,
+      videos
+    };
   }
 };
 </script>
 
 <style scoped>
-:root {
-  --primary-color: #f1c40f;
-  --secondary-color: #2c3e50;
-  --accent-color: #e67e22;
-  --background-color: #ecf0f1;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: var(--background-color);
-  margin: 0;
-  padding: 0;
-  color: #ffffff;
-}
-
-nav {
-  background-color: var(--secondary-color);
-  padding: 15px 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-nav ul {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-nav li {
-  margin: 0 20px;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 15px;
-  border-radius: 5px;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-nav a:hover {
-  background: var(--primary-color);
-  transform: scale(1.1);
-}
-
-#user-info {
-  display: none;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-#logout-btn {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  margin-left: 10px;
-}
-
-#logout-btn:hover {
-  background-color: var(--primary-color);
-}
-
 main {
-  padding: 40px;
-}
-
-h3 {
-  color: var(--primary-color);
-  text-align: center;
-  font-size: 28px;
-  margin-bottom: 20px;
-}
-
-p {
-  text-align: center;
-  color: var(--background-color);
-  font-size: 18px;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: var(--spacing-3xl) var(--spacing-lg);
+  min-height: 80vh;
+}
+
+section h2 {
+  text-align: center;
+  color: var(--color-honey-dark);
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-lg);
+  font-family: var(--font-secondary);
+}
+
+section > p {
+  text-align: center;
+  color: var(--color-dark-gray);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-2xl);
+  line-height: 1.6;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-3xl);
 }
 
 figure {
   margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: 300px;
-  height: 200px;
-  cursor: pointer;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-base);
+  transition: all var(--transition-base);
+  background: var(--color-white);
+  border: 2px solid var(--color-medium-gray);
 }
 
-figure img, figure video {
+figure:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-honey);
+  border-color: var(--color-honey-light);
+}
+
+img,
+video {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
+  height: auto;
+  display: block;
 }
 
-footer {
-  padding: 20px;
-  background-color: var(--secondary-color);
-  color: white;
-  text-align: center;
-}
+@media (max-width: 1024px) {
+  section h2 {
+    font-size: var(--font-size-2xl);
+  }
 
-footer p,
-footer a {
-  font-size: 16px;
-}
-
-footer a {
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-footer a:hover {
-  color: var(--accent-color);
-}
-
-footer ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-footer ul li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-footer ul a {
-  color: white;
-  font-size: 16px;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-footer ul a:hover {
-  color: var(--primary-color);
+  section > p {
+    font-size: var(--font-size-base);
+  }
 }
 
 @media (max-width: 768px) {
+  main {
+    padding: var(--spacing-2xl) var(--spacing-base);
+  }
+
+  section h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  section > p {
+    font-size: var(--font-size-sm);
+  }
+
   .container {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--spacing-base);
+    margin-bottom: var(--spacing-2xl);
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: var(--spacing-lg) var(--spacing-sm);
   }
 
-  h3 {
-    font-size: 24px;
+  section h2 {
+    font-size: var(--font-size-lg);
   }
 
-  p {
-    font-size: 16px;
+  section > p {
+    font-size: var(--font-size-xs);
   }
 
-  footer p {
-    font-size: 14px;
-  }
-
-  footer ul li {
-    margin: 0 5px;
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
   }
 }
 </style>
