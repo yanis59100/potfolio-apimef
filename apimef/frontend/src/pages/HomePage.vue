@@ -11,43 +11,30 @@
 
     <section id="introduction">
       <img src="/images/apimef.jpg" alt="Apimef Logo" class="hero-logo" />
-      <h1>🍯 Bienvenue sur Apimef 🐝</h1>
+      <h1>🍯 Welcome to Apimef 🐝</h1>
       <p>
-        Apimef vous présente l'univers de l'apiculture et vous propose du miel
-        100% français, directement issu de nos ruches. Notre miel est
-        entièrement biologique, récolté avec soin pour vous offrir une
-        expérience authentique et naturelle.
+        Apimef shows you beekeeping and sells 100% French honey, directly from our hives. Our honey is organic, harvested with care for a natural experience.
       </p>
     </section>
 
     <section id="a-propos">
-      <h2>🌿 À propos de Apimef</h2>
+      <h2>🌿 About Apimef</h2>
       <p>
-        Chez Apimef, nous mettons un point d'honneur à cultiver l'amour de
-        l'apiculture durable. Nous croyons fermement que les abeilles jouent un
-        rôle crucial dans l'équilibre de notre écosystème. C'est pourquoi nous
-        nous engageons à respecter des pratiques biologiques, sans pesticides
-        ni produits chimiques. Nos ruches sont installées dans des environnements
-        préservés pour garantir un miel pur et naturel.
+        At Apimef, we care about sustainable beekeeping. We believe bees are important for the ecosystem. That's why we use organic practices, no pesticides. Our hives are in clean places for pure honey.
       </p>
     </section>
 
     <section id="valeurs">
       <div>
-        <h3>🌍 Respect de l'environnement</h3>
+        <h3>🌍 Respect environment</h3>
         <p>
-          Nous croyons en une apiculture responsable, respectueuse de
-          l'environnement. Nos pratiques visent à préserver la biodiversité et
-          à soutenir les populations d'abeilles dans un monde en constante
-          évolution.
+          We believe in responsible beekeeping, good for the environment. Our practices help biodiversity and bee populations.
         </p>
       </div>
       <div>
-        <h3>✨ Qualité et Authenticité</h3>
+        <h3>✨ Quality and Authenticity</h3>
         <p>
-          Notre miel est 100% biologique, récolté avec soin dans nos ruches.
-          Chaque pot contient un produit pur, sans ajout d'additifs, pour une
-          saveur naturelle et délicieuse.
+          Our honey is 100% organic, harvested with care. Each jar has pure honey, no additives, for natural taste.
         </p>
       </div>
       <div>

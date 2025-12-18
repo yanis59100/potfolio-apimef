@@ -1,7 +1,7 @@
+// Backend for honey site
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const helmet = require("helmet");
 const mysql = require("mysql2");
 const path = require("path");
 const bcrypt = require("bcryptjs");
@@ -13,33 +13,23 @@ const authMiddleware = require("./authMiddleware");
 
 const app = express();
 const port = process.env.PORT || 3000;
-// Configure Stripe only if a secret key is provided and STRIPE_MOCK is not set
-const useStripe = !!process.env.STRIPE_SECRET_KEY && process.env.STRIPE_MOCK !== "true";
-const stripe = useStripe ? Stripe(process.env.STRIPE_SECRET_KEY) : null;
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Vérification des variables d'environnement (Stripe optionnel)
-if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_NAME || !process.env.JWT_SECRET) {
-  console.error("Missing required environment variables (DB/JWT). Ensure DB_HOST, DB_USER, DB_PASSWORD, DB_NAME and JWT_SECRET are set.");
+// Check env vars
+if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_NAME || !process.env.JWT_SECRET || !process.env.STRIPE_SECRET_KEY) {
+  console.error("Missing env vars");
   process.exit(1);
 }
 
-// Security headers
-app.use(helmet());
-
-// CORS: allow only FRONTEND_URL if provided, otherwise default to allow all (useful for local dev)
-const corsOptions = {};
-if (process.env.FRONTEND_URL) {
-  corsOptions.origin = process.env.FRONTEND_URL;
-}
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
-// Fichiers statiques
+// Static files
 app.use("/css", express.static(path.join(__dirname, "../frontend/src/css")));
 app.use("/js", express.static(path.join(__dirname, "../frontend/src/JavaScript")));
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-// Connexion MySQL
+// DB connection
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -49,87 +39,34 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
   if (err) {
-    console.error("Erreur de connexion à la base de données :", err);
+    console.error("DB error:", err);
     process.exit(1);
   }
-  console.log("Connecté à la base de données MySQL");
+  console.log("Connected to DB");
 });
-
-// Routes HTML (disabled for Vue SPA)
-// const htmlPages = ["boutique", "connexion", "inscription", "contact", "images", "profil"];
-// htmlPages.forEach((page) => {
-//   app.get(`/${page}`, (req, res) => {
-//     res.sendFile(path.join(__dirname, `../frontend/public/${page}.html`));
-//   });
-// });
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
-// 🔥 Récupération des produits Stripe (ou mock si Stripe indisponible)
+// Get products
 app.get("/api/products", async (req, res) => {
-  if (!useStripe) {
-    // Retourne des produits factices pour développement/local
-    const mockProducts = [
-      {
-        id: "prod_mock_1",
-        name: "Miel de tilleul",
-        description: "Miel de tilleul artisanal",
-        images: ["/images/image%20miel/IMG-20241116-WA0002.jpg"],
-        default_price: { id: "price_mock_1", unit_amount: 1200, currency: "eur" }
-      },
-      {
-        id: "prod_mock_2",
-        name: "Miel de printemps",
-        description: "Miel de printemps floral",
-        images: ["/images/image%20miel/IMG-20241116-WA0004.jpg"],
-        default_price: { id: "price_mock_2", unit_amount: 1000, currency: "eur" }
-      }
-    ];
-
-    return res.json(mockProducts);
-  }
-
+  console.log("Getting products");
   try {
     const products = await stripe.products.list({ expand: ["data.default_price"] });
     res.json(products.data);
   } catch (error) {
-    console.error("Erreur lors de la récupération des produits :", error);
+    console.error("Error getting products:", error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// 🔐 Route protégée Stripe
+// Create checkout session
 app.post("/create-checkout-session", async (req, res) => {
   const { line_items } = req.body;
 
-  // Optional: Check token if provided, but don't require it (guest checkout allowed)
-  if (req.headers.authorization) {
-    const authHeader = req.headers.authorization;
-    if (authHeader.startsWith("Bearer ")) {
-      const token = authHeader.split(" ")[1];
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-      } catch (err) {
-        // Token is invalid, but we still allow guest checkout
-        console.warn("Invalid token provided, proceeding with guest checkout");
-      }
-    }
-  }
-
   if (!line_items || line_items.length === 0) {
-    return res.status(400).json({ error: "Les éléments de ligne sont requis." });
-  }
-
-  if (!useStripe) {
-    // Mode mock : on simule une session et on retourne une URL locale
-    const mockSessionId = `sess_mock_${Date.now()}`;
-    const host = `${req.protocol}://${req.get("host")}`;
-    const url = `${host}/mock-checkout?session_id=${mockSessionId}`;
-    // Mock session created (Stripe not configured)
-    return res.json({ url });
+    return res.status(400).json({ error: "Need items" });
   }
 
   try {
@@ -143,38 +80,18 @@ app.post("/create-checkout-session", async (req, res) => {
 
     res.json({ url: session.url });
   } catch (error) {
-    console.error("Erreur lors de la création de la session de paiement :", error);
+    console.error("Checkout error:", error);
     res.status(500).json({ error: error.message });
   }
-});
-
-// Routes mock pour tester le flux de paiement sans Stripe
-app.get("/mock-checkout", (req, res) => {
-  const sessionId = req.query.session_id || "unknown";
-  const host = `${req.protocol}://${req.get("host")}`;
-  // Simple page pour simuler la page de paiement
-  res.send(`
-    <html>
-      <head><meta charset="utf-8"><title>Mock Checkout</title></head>
-      <body style="font-family:Arial,Helvetica,sans-serif;">
-        <h1>Mock Checkout</h1>
-        <p>Session: ${sessionId}</p>
-        <p>This is a mock checkout page. Use the buttons below to simulate success or cancellation.</p>
-        <a href="${host}/success">Simulate Success</a>
-        <br/><br/>
-        <a href="${host}/cancel">Simulate Cancel</a>
-      </body>
-    </html>
-  `);
 });
 
 app.get("/success", (req, res) => {
   res.send(`
     <html>
       <head><meta charset="utf-8"><title>Paiement réussi</title></head>
-      <body style="font-family:Arial,Helvetica,sans-serif;">
-        <h1>Paiement simulé réussi</h1>
-        <p>Merci pour votre achat (mode mock).</p>
+      <body>
+        <h1>Paiement réussi</h1>
+        <p>Merci pour votre achat.</p>
         <a href="/">Retour à l'accueil</a>
       </body>
     </html>
@@ -185,80 +102,76 @@ app.get("/cancel", (req, res) => {
   res.send(`
     <html>
       <head><meta charset="utf-8"><title>Paiement annulé</title></head>
-      <body style="font-family:Arial,Helvetica,sans-serif;">
-        <h1>Paiement simulé annulé</h1>
-        <p>La transaction a été annulée (mode mock).</p>
+      <body>
+        <h1>Paiement annulé</h1>
+        <p>La transaction a été annulée.</p>
         <a href="/">Retour à l'accueil</a>
       </body>
     </html>
   `);
 });
 
-// 🔐 Inscription
+// Register
 app.post("/api/register", (req, res) => {
+  console.log("Registering user");
   const { nom, prenom, adresse, ville, code_postal, email, password } = req.body;
 
   if (!nom || !prenom || !adresse || !ville || !code_postal || !email || !password) {
-    return res.status(400).json({ message: "Tous les champs sont requis." });
+    return res.status(400).json({ message: "All fields required." });
   }
 
   const checkEmailQuery = "SELECT * FROM utilisateurs WHERE email = ?";
   db.query(checkEmailQuery, [email], (err, results) => {
-    if (err) return res.status(500).json({ message: "Erreur interne." });
-    if (results.length > 0) return res.status(400).json({ message: "Cet email est déjà utilisé." });
+    if (err) return res.status(500).json({ message: "Error." });
+    if (results.length > 0) return res.status(400).json({ message: "Email already used." });
 
     bcrypt.hash(password, 10, (err, hashedPassword) => {
-      if (err) return res.status(500).json({ message: "Erreur interne." });
+      if (err) return res.status(500).json({ message: "Error." });
 
       const query = "INSERT INTO utilisateurs (nom, prenom, adresse, ville, code_postal, email, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
       db.query(query, [nom, prenom, adresse, ville, code_postal, email, hashedPassword], (err) => {
-        if (err) return res.status(500).json({ message: "Erreur lors de l'inscription." });
-        res.status(200).json({ message: "Inscription réussie !" });
+        if (err) return res.status(500).json({ message: "Register error." });
+        res.status(200).json({ message: "Register success!" });
       });
     });
   });
 });
 
-// 🔐 Connexion
+// Login
 app.post("/api/login", (req, res) => {
+  console.log("Logging in user");
   const { email, password } = req.body;
 
-  if (!email || !password) return res.status(400).json({ message: "L'email et le mot de passe sont requis." });
+  if (!email || !password) return res.status(400).json({ message: "Email and password required." });
 
   const query = "SELECT * FROM utilisateurs WHERE email = ?";
   db.query(query, [email], (err, results) => {
-    if (err) return res.status(500).json({ message: "Erreur interne." });
-    if (results.length === 0) return res.status(400).json({ message: "Utilisateur non trouvé." });
+    if (err) return res.status(500).json({ message: "Error." });
+    if (results.length === 0) return res.status(400).json({ message: "User not found." });
 
     const user = results[0];
 
     bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err) return res.status(500).json({ message: "Erreur interne." });
-      if (!isMatch) return res.status(400).json({ message: "Mot de passe incorrect." });
+      if (err) return res.status(500).json({ message: "Error." });
+      if (!isMatch) return res.status(400).json({ message: "Wrong password." });
 
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
       res.status(200).json({
-        message: "Connexion réussie !",
+        message: "Login success!",
         token,
-        utilisateur: { id: user.id, nom: user.nom, prenom: user.prenom, email: user.email },
+        user: { id: user.id, nom: user.nom, prenom: user.prenom, email: user.email },
       });
     });
   });
 });
 
-// Global Error Handling
-app.use((err, req, res, next) => {
-  console.error("Erreur survenue :", err.message);
-  res.status(err.status || 500).json({ message: "Une erreur interne est survenue." });
-});
-
-// SPA Fallback: serve index.html for all unknown routes (Vue Router will handle client-side routing)
+// SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-// 🚀 Lancement du serveur
+// Start server
 app.listen(port, () => {
-  console.log(`[INFO] Server listening on port ${port}`);
+  console.log(`Server on port ${port}`);
 });

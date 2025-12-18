@@ -10,7 +10,7 @@
           <p>{{ errorMessage }}</p>
         </div>
 
-        <form @submit.prevent="connecterUtilisateur">
+        <form @submit.prevent="login">
           <div>
             <label for="email">Email :</label>
             <input type="email" v-model="email" placeholder="Votre email" required />
@@ -48,12 +48,12 @@ export default {
       isAuthenticated: false
     });
 
-    // Fonction pour se connecter
-    const connecterUtilisateur = async () => {
-      errorMessage.value = ""; // Réinitialiser le message d'erreur
+    // Login function
+    const login = async () => {
+      errorMessage.value = ""; // Reset error
 
       if (!email.value || !password.value) {
-        errorMessage.value = "Veuillez remplir tous les champs.";
+        errorMessage.value = "Fill all fields.";
         return;
       }
 
@@ -66,22 +66,22 @@ export default {
 
         if (!response.ok) {
           const error = await response.json();
-          errorMessage.value = error.message || "Erreur lors de la connexion.";
+          errorMessage.value = error.message || "Login error.";
           return;
         }
 
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        localStorage.setItem("utilisateur", JSON.stringify(data.utilisateur));
+        localStorage.setItem("utilisateur", JSON.stringify(data.user));
 
-        userInfo.name = data.utilisateur.nom;
+        userInfo.name = data.user.nom;
         userInfo.isAuthenticated = true;
 
         setTimeout(() => {
           window.location.href = "/profil";
         }, 2000);
       } catch (error) {
-        errorMessage.value = "Une erreur est survenue. Veuillez réessayer.";
+        errorMessage.value = "Error. Try again.";
       }
     };
 
@@ -107,7 +107,7 @@ export default {
       password,
       errorMessage,
       userInfo,
-      connecterUtilisateur,
+      login,
       logout
     };
   }

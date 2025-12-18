@@ -31,7 +31,7 @@ export default {
 }
 
 header {
-  background-color: var(--secondary-color);
+  background-color: #2c3e50;
   padding: 15px 0;
   position: sticky;
   top: 0;
@@ -58,13 +58,10 @@ nav a {
   font-size: 18px;
   font-weight: bold;
   padding: 10px 15px;
-  border-radius: 5px;
-  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 nav a:hover {
-  background: var(--primary-color);
-  transform: scale(1.1);
+  background: #f1c40f;
 }
 
 #user-info {
@@ -75,23 +72,22 @@ nav a:hover {
 }
 
 #logout-btn {
-  background-color: var(--accent-color);
+  background-color: #e67e22;
   color: white;
   padding: 8px 14px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s ease;
   margin-left: 10px;
 }
 
 #logout-btn:hover {
-  background-color: var(--primary-color);
+  background-color: #f1c40f;
 }
 
 footer {
-  background-color: var(--secondary-color);
+  background-color: #2c3e50;
   color: white;
   text-align: center;
   padding: 20px;
@@ -101,13 +97,12 @@ footer {
 }
 
 footer a {
-  color: var(--primary-color);
+  color: #f1c40f;
   text-decoration: none;
-  transition: color 0.3s ease;
 }
 
 footer a:hover {
-  color: var(--accent-color);
+  color: #e67e22;
 }
 
 footer ul {
@@ -123,11 +118,10 @@ footer ul li {
 footer ul a {
   color: white;
   text-decoration: none;
-  transition: color 0.3s ease;
 }
 
 footer ul a:hover {
-  color: var(--primary-color);
+  color: #f1c40f;
 }
 
 @media (max-width: 768px) {

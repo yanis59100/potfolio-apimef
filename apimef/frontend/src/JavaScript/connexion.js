@@ -1,9 +1,10 @@
 import { API_BASE } from "../config";
 
-export async function connecterUtilisateur(email, password) {
+export async function loginUser(email, password) {
+  console.log("Trying to login");
   try {
     if (!email || !password) {
-      afficherMessage("Veuillez remplir tous les champs.", "error");
+      showMessage("Fill all fields.", "error");
       return false;
     }
 
@@ -17,29 +18,31 @@ export async function connecterUtilisateur(email, password) {
 
     if (!response.ok) {
       const error = await response.json();
-      afficherMessage(error.message || "Erreur lors de la connexion.", "error");
+      showMessage(error.message || "Login error.", "error");
       return false;
     }
 
     const data = await response.json();
+    console.log("Login successful");
 
     localStorage.setItem("token", data.token);
-    localStorage.setItem("utilisateur", JSON.stringify(data.utilisateur));
+    localStorage.setItem("utilisateur", JSON.stringify(data.user));
 
-    afficherMessage(`Bienvenue, ${data.utilisateur.nom} !`, "success");
+    showMessage(`Welcome, ${data.user.nom} !`, "success");
 
     setTimeout(() => {
       window.location.href = "/profil";
     }, 2000);
 
-    return data.utilisateur;
+    return data.user;
   } catch (error) {
-    afficherMessage("Une erreur est survenue. Veuillez réessayer.", "error");
+    console.log("Login failed");
+    showMessage("Error. Try again.", "error");
     return false;
   }
 }
 
-function afficherMessage(message, type = "success") {
+function showMessage(message, type = "success") {
   const messageBox = document.getElementById("message-box");
   if (!messageBox) return;
 
@@ -67,5 +70,5 @@ document.getElementById("connexion-form").addEventListener("submit", (event) => 
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  connecterUtilisateur(email, password);
+  loginUser(email, password);
 });

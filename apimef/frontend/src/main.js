@@ -1,15 +1,16 @@
+// Vue app
 import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
-const HomePage = () => import('./pages/HomePage.vue');
-const InscriptionPage = () => import('./pages/InscriptionPage.vue');
-const ConnexionPage = () => import('./pages/ConnexionPage.vue');
-const ContactPage = () => import('./pages/ContactPage.vue');
-const ImagesPage = () => import('./pages/ImagesPage.vue');
-const BoutiquePage = () => import('./pages/BoutiquePage.vue');
-const ProfilPage = () => import('./pages/ProfilPage.vue');
-const NotFoundPage = () => import('./pages/NotFoundPage.vue');
+import HomePage from './pages/HomePage.vue';
+import InscriptionPage from './pages/InscriptionPage.vue';
+import ConnexionPage from './pages/ConnexionPage.vue';
+import ContactPage from './pages/ContactPage.vue';
+import ImagesPage from './pages/ImagesPage.vue';
+import BoutiquePage from './pages/BoutiquePage.vue';
+import ProfilPage from './pages/ProfilPage.vue';
+import NotFoundPage from './pages/NotFoundPage.vue';
 
 import './css/styles.css';
 

@@ -17,17 +17,10 @@
         <p>Quatre variétés premium de miel biologique 100% français. Chaque récolte raconte l'histoire de nos abeilles et de nos ruches.</p>
       </section>
 
-      <section class="recherche">
-        <form @submit.prevent="() => {}">
-          <input type="text" v-model="searchQuery" placeholder="🔍 Chercher un miel..." />
-          <button type="submit">Chercher</button>
-        </form>
-      </section>
-
-      <h3>🐝 Miels en Vedette</h3>
+      <h3>🐝 Nos Miels</h3>
 
       <section class="articles">
-        <article class="article" v-for="(product, index) in filteredProducts" :key="index">
+        <article class="article" v-for="(product, index) in products" :key="index">
           <img :src="product.img" :alt="'Miel de ' + product.name">
           <div class="info-article">
             <h4>{{ product.name }}</h4>
@@ -89,7 +82,6 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const searchQuery = ref("");
     const showCartModal = ref(false);
     const quantity = reactive({});
     // Load cart from localStorage and sanitize (remove invalid items)
@@ -103,16 +95,9 @@ export default {
       { name: "Miel de colza", price: 10, img: "/images/image%20miel/IMG-20241116-WA0001.jpg", stripePriceId: "price_1Qw0agB4WwtW5CxY6uIgogkw" }
     ];
 
-    // Initialiser les quantités à 0 (force l'utilisateur à choisir)
+    // Init quantities
     products.forEach((_, index) => {
       quantity[index] = 0;
-    });
-
-    const filteredProducts = computed(() => {
-      if (!searchQuery.value) return products;
-      return products.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-      );
     });
 
     const totalPrice = computed(() => {
@@ -205,12 +190,10 @@ export default {
     };
 
     return {
-      searchQuery,
       cart,
       quantity,
       showCartModal,
       products,
-      filteredProducts,
       totalPrice,
       totalItems,
       addToCart,
