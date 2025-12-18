@@ -60,7 +60,6 @@ L'application sera accessible à **http://localhost:8080**
 - MySQL
 - JWT
 - Bcryptjs
-- Helmet
 
 ### Paiement
 - **Dev** : Mock Stripe
@@ -125,11 +124,20 @@ mysql> source backend/database/schema.sql;
 
 ---
 
-## 🔒 Sécurité
+## 🧪 Tests
+
+Pour lancer les tests (backend seulement) :
+```bash
+cd backend
+npm test
+```
+
+Tests unitaires pour les fonctions clés (auth, hash).
+
+---
 
 - ✅ Mots de passe hachés (bcryptjs)
 - ✅ JWT avec expiration
-- ✅ Headers de sécurité (Helmet)
 - ✅ CORS configuré
 - ✅ Validation des entrées
 

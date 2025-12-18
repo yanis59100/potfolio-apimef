@@ -1,0 +1,70 @@
+
+services:
+  # Base de données MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: apimef-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: apimef
+      MYSQL_USER: apimef
+      MYSQL_PASSWORD: 2d2cea37e2
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+    networks:
+      - apimef-network
+
+  # Backend API (Node.js/Express)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apimef-backend
+    environment:
+      DB_HOST: mysql
+      DB_USER: apimef
+      DB_PASSWORD: 2d2cea37e2
+      DB_NAME: apimef
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_MOCK: ${STRIPE_MOCK:-true}
+      PORT: 8080
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+      NODE_ENV: ${NODE_ENV:-production}
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend/dist:/app/frontend/public:ro
+    networks:
+      - apimef-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080/api/products', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # Frontend (optionnel en production - servir via backend)
+  # En dev, utiliser: cd frontend && npm run serve
+  # En prod, les fichiers statiques sont servis par le backend
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  apimef-network:
+    driver: bridge
