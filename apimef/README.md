@@ -25,8 +25,8 @@ mysql -u root -p < backend/database/schema.sql
 # 3. Démarrer backend + frontend
 npm install --prefix backend
 npm install --prefix frontend
-npm run start:backend &  # Terminal 1
-npm run start:frontend   # Terminal 2
+node backend/server.js &  # Terminal 1
+npm run serve             # Terminal 2
 ```
 
 L'application sera accessible à **http://localhost:8080**
@@ -105,8 +105,8 @@ VUE_APP_API_BASE_URL=http://localhost:3000
 ### Développeurs
 ```bash
 npm run dev              # Démarrer backend + frontend
-npm run start:backend    # Backend seulement
-npm run start:frontend   # Frontend seulement
+node backend/server.js   # Backend seulement
+npm run serve            # Frontend seulement
 npm run build            # Build production
 ```
 
